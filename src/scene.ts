@@ -5,6 +5,9 @@ import { AxesHelper, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 import { desert } from './desert.ts';
 import { cacti } from './cacti.ts'
 
+
+
+
 // Set up 
 
 const WIDTH = window.innerWidth;
@@ -24,8 +27,32 @@ document.body.appendChild(renderer.domElement);
 
 const axesHelper = new AxesHelper(10);
 scene.add(axesHelper);
+axesHelper.removeFromParent();
 
-// Controls
+
+// UI
+
+const button = document.createElement('button');
+button.innerText = 'show axes';
+button.addEventListener('click', () => {
+    console.log('clicked');
+    console.log(axesHelper);
+    if (axesHelper.parent) {
+        console.log('removing');
+        axesHelper.removeFromParent();
+        button.innerText = 'show axes';
+    } else {
+        console.log('adding');
+        scene.add(axesHelper);
+        button.innerText = 'hide axes';
+    }
+})
+document.body.appendChild(button);
+
+
+
+
+// Orbit Controls
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.addEventListener('change', () => renderer.render(scene, camera));
@@ -34,20 +61,22 @@ controls.enableZoom = true;
 controls.minPolarAngle = 0;
 // controls.maxPolarAngle = Math.PI * 0.5;
 
-// Lights
-
-// addAmbientLight(scene);
-addDirectionalLight(scene);
-
 
 
 
 // Elements
+addDirectionalLight(scene);
 scene.add( desert );
 scene.add(cacti);
 
 
-renderer.render(scene, camera);
+
+// Render
+renderer.setAnimationLoop(() =>
+    renderer.render(scene, camera)
+)
+
+
 
 
 export {
