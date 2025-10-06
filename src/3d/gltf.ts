@@ -6,7 +6,7 @@ const loader = new GLTFLoader();
 export async function addGLTFtoScene(scene: Scene, filename: string, dir?: string) {
     if (dir) {
         loader.setPath(dir);
-        // loader.setResourcePath(dir);
+        loader.setResourcePath(dir);
     }
 
 

@@ -1,8 +1,9 @@
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // import { addGLTFtoScene } from './gltf';
-// import { addAmbientLight, addDirectionalLight } from './3d/lights';
+import { addDirectionalLight } from './3d/lights';
 import { AxesHelper, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
-import {desert} from './desert.ts'
+import { desert } from './desert.ts';
+import { cacti } from './cacti.ts'
 
 // Set up 
 
@@ -10,8 +11,9 @@ const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
 
 const scene = new Scene();
-const camera = new PerspectiveCamera(75, WIDTH / HEIGHT, 0.1, 1000);
-camera.position.z = 5;
+const camera = new PerspectiveCamera(100, WIDTH / HEIGHT, 0.1, 1000);
+camera.position.y = 10;
+camera.position.z = 80;
 
 
 const renderer = new WebGLRenderer();
@@ -35,14 +37,14 @@ controls.minPolarAngle = 0;
 // Lights
 
 // addAmbientLight(scene);
-// addDirectionalLight(scene);
+addDirectionalLight(scene);
 
 
 
 
 // Elements
 scene.add( desert );
-
+scene.add(cacti);
 
 
 renderer.render(scene, camera);
