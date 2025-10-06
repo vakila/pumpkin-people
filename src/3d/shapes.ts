@@ -5,12 +5,12 @@ import * as THREE from 'three';
 
 
 
-const geometry = new THREE.BoxGeometry(1, 1, 1);
+// const geometry = new THREE.BoxGeometry(1, 1, 1);
 const normalMat = new THREE.MeshNormalMaterial();
-const blueMat = new THREE.MeshBasicMaterial({ color: 'blue' });
-const greenMat = new THREE.MeshBasicMaterial({ color: 'green' });
+// const blueMat = new THREE.MeshBasicMaterial({ color: 'blue' });
+// const greenMat = new THREE.MeshBasicMaterial({ color: 'green' });
 
-const cube = new THREE.Mesh(geometry, blueMat);
+// const cube = new THREE.Mesh(geometry, blueMat);
 // scene.add(cube);
 // console.log(scene);
 

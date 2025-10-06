@@ -1,4 +1,7 @@
-import './index.css'
-import App from './src/App.ts'
+import './index.css';
+import { renderer } from './src/scene';
 
-export default App();
+
+
+
+console.log(renderer);
