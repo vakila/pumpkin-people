@@ -37,6 +37,8 @@ overlay.id = 'overlay';
 document.body.appendChild(overlay);
 
 //// colors
+const START_COLOR = '#FFFFFF';
+
 const colorPicker = document.createElement('div');
 colorPicker.classList.add('buttonish');
 const label = document.createElement('label');
@@ -47,31 +49,32 @@ const input = document.createElement('input');
 input.type = 'color';
 input.name = 'color';
 input.id = 'color';
-input.value = '#F000FF';
+input.value = START_COLOR;
 colorPicker.appendChild(input);
-colorPicker.addEventListener('change', (e) => {
+colorPicker.addEventListener('input', () => {
     console.log('color picked');
     console.log(input.value);
+    light.color.set(input.value);
 });
 overlay.appendChild(colorPicker);
 
-// // dev ui
-const button = document.createElement('button');
-button.innerText = 'show axes';
-button.addEventListener('click', () => {
-    console.log('clicked');
-    console.log(axesHelper);
-    if (axesHelper.parent) {
-        console.log('removing');
-        axesHelper.removeFromParent();
-        button.innerText = 'show axes';
-    } else {
-        console.log('adding');
-        scene.add(axesHelper);
-        button.innerText = 'hide axes';
-    }
-})
-overlay.appendChild(button);
+// // // dev ui
+// const button = document.createElement('button');
+// button.innerText = 'show axes';
+// button.addEventListener('click', () => {
+//     console.log('clicked');
+//     console.log(axesHelper);
+//     if (axesHelper.parent) {
+//         console.log('removing');
+//         axesHelper.removeFromParent();
+//         button.innerText = 'show axes';
+//     } else {
+//         console.log('adding');
+//         scene.add(axesHelper);
+//         button.innerText = 'hide axes';
+//     }
+// })
+// overlay.appendChild(button);
 
 
 
@@ -90,7 +93,8 @@ controls.minPolarAngle = 0;
 
 // Elements
 // addDirectionalLight(scene);
-const light = addDirectionalLight(scene, 0xF000FF, 10);
+const stringToColor = (color: string) => parseInt(color.replace('#', '0x'));
+const light = addDirectionalLight(scene, stringToColor(START_COLOR), 10);
 console.log('LIGHT', light);
 scene.add(desert);
 scene.add(cacti);
