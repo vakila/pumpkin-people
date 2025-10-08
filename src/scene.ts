@@ -32,6 +32,30 @@ axesHelper.removeFromParent();
 
 // UI
 
+const overlay = document.createElement('div');
+overlay.id = 'overlay';
+document.body.appendChild(overlay);
+
+//// colors
+const colorPicker = document.createElement('div');
+colorPicker.classList.add('buttonish');
+const label = document.createElement('label');
+label.setAttribute('for', 'color');
+label.innerText = 'color';
+colorPicker.appendChild(label);
+const input = document.createElement('input');
+input.type = 'color';
+input.name = 'color';
+input.id = 'color';
+input.value = '#F000FF';
+colorPicker.appendChild(input);
+colorPicker.addEventListener('change', (e) => {
+    console.log('color picked');
+    console.log(input.value);
+});
+overlay.appendChild(colorPicker);
+
+// // dev ui
 const button = document.createElement('button');
 button.innerText = 'show axes';
 button.addEventListener('click', () => {
@@ -47,7 +71,7 @@ button.addEventListener('click', () => {
         button.innerText = 'hide axes';
     }
 })
-document.body.appendChild(button);
+overlay.appendChild(button);
 
 
 
@@ -65,8 +89,10 @@ controls.minPolarAngle = 0;
 
 
 // Elements
-addDirectionalLight(scene);
-scene.add( desert );
+// addDirectionalLight(scene);
+const light = addDirectionalLight(scene, 0xF000FF, 10);
+console.log('LIGHT', light);
+scene.add(desert);
 scene.add(cacti);
 
 
