@@ -14,7 +14,7 @@ const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
 
 const scene = new Scene();
-const camera = new PerspectiveCamera(100, WIDTH / HEIGHT, 0.1, 1000);
+const camera = new PerspectiveCamera(75, WIDTH / HEIGHT);
 camera.position.y = 10;
 camera.position.z = 80;
 
