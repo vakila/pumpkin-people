@@ -1,9 +1,9 @@
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // import { addGLTFtoScene } from './gltf';
 import { addDirectionalLight } from './3d/lights';
-import { AxesHelper, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import { AxesHelper, PerspectiveCamera, Raycaster, Scene, Vector2, WebGLRenderer } from 'three';
 import { desert, land } from './desert.ts';
-import { cacti } from './cacti.ts'
+import { cacti, addCactus, type CactusIndex } from './cacti.ts'
 
 
 
@@ -35,6 +35,7 @@ axesHelper.removeFromParent();
 const overlay = document.createElement('div');
 overlay.id = 'overlay';
 document.body.appendChild(overlay);
+
 
 //// colors
 const START_COLOR_CACTI = '#FFFFFF';
@@ -73,6 +74,52 @@ desertColorPicker.addEventListener('input', (e) => {
 overlay.appendChild(desertColorPicker);
 
 
+//// new cactus
+function getButton(name: string, text: string) {
+    const button = document.createElement('button');
+    button.id = `button-${name}`;
+    button.innerText = text;
+    return button;
+}
+
+const raycaster = new Raycaster();
+const pointer = new Vector2();
+function cactusPositioner(cactus: ReturnType<typeof addCactus>) {
+    return (e: PointerEvent) => {
+        console.log(e.clientX, e.clientY);
+        pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+        pointer.y = - (e.clientY / window.innerHeight) * 2 + 1;
+        console.log(pointer.x, pointer.y);
+        raycaster.setFromCamera(pointer, camera);
+        const intersection = raycaster.intersectObject(land)[0]?.point;
+        console.log(intersection);
+        if (intersection) {
+            cactus.position.x = intersection.x;
+            cactus.position.z = intersection.z;
+        }
+    }
+
+}
+const newButton = getButton('new', 'new cactus');
+newButton.addEventListener('click', async (e) => {
+    console.log('new cactus');
+    const cactusType = Math.ceil(Math.random() * 4) as CactusIndex;
+    const newCactus = await addCactus(cactusType);
+    console.log(newCactus);
+
+    const onPointerMove = cactusPositioner(newCactus);
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('click', () => {
+        window.removeEventListener('pointermove', onPointerMove);
+    });
+
+    // newCactus!.position.x = e.clientX / window.innerWidth;
+    // newCactus!.position.z = e.clientY;
+
+})
+overlay.appendChild(newButton);
+
+
 // // // dev ui
 // const button = document.createElement('button');
 // button.innerText = 'show axes';
@@ -90,6 +137,8 @@ overlay.appendChild(desertColorPicker);
 //     }
 // })
 // overlay.appendChild(button);
+
+
 
 
 
