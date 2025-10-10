@@ -37,26 +37,32 @@ overlay.id = 'overlay';
 document.body.appendChild(overlay);
 
 //// colors
-const START_COLOR = '#FFFFFF';
+const START_COLOR_CACTI = '#FFFFFF';
+const START_COLOR_LAND = '#000000';
 
-const colorPicker = document.createElement('div');
+function getColorPicker(name: string) {
+    const colorPicker = document.createElement('div');
 colorPicker.classList.add('buttonish');
 const label = document.createElement('label');
-label.setAttribute('for', 'color');
-label.innerText = 'color';
+    label.setAttribute('for', `color-${name}`);
+    label.innerText = name;
 colorPicker.appendChild(label);
 const input = document.createElement('input');
 input.type = 'color';
-input.name = 'color';
-input.id = 'color';
-input.value = START_COLOR;
+    input.name = `color-${name}`;
+    input.id = `color-${name}`;
+    input.value = START_COLOR_CACTI;
 colorPicker.appendChild(input);
 colorPicker.addEventListener('input', () => {
     console.log('color picked');
     console.log(input.value);
     light.color.set(input.value);
 });
-overlay.appendChild(colorPicker);
+    return colorPicker;
+}
+
+const cactiColorPicker = getColorPicker('cacti');
+overlay.appendChild(cactiColorPicker);
 
 // // // dev ui
 // const button = document.createElement('button');
@@ -94,7 +100,7 @@ controls.minPolarAngle = 0;
 // Elements
 // addDirectionalLight(scene);
 const stringToColor = (color: string) => parseInt(color.replace('#', '0x'));
-const light = addDirectionalLight(scene, stringToColor(START_COLOR), 10);
+const light = addDirectionalLight(scene, stringToColor(START_COLOR_CACTI), 10);
 console.log('LIGHT', light);
 scene.add(desert);
 scene.add(cacti);

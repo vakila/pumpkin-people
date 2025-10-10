@@ -14,7 +14,7 @@ const sunPosition = new Vector3().setFromSphericalCoords( 1, phi, theta );
 
 sky.material.uniforms.sunPosition.value = sunPosition;
 
-// desert.add(sky);
+desert.add(sky);
 
 
 // Land 
@@ -27,4 +27,4 @@ desert.add(land);
 
 
 
-export {desert}
+export { desert, land, sky }
