@@ -1,4 +1,4 @@
-import { MathUtils, Scene, Vector3, PlaneGeometry, PlaneHelper, Plane, Mesh, MeshStandardMaterial, DoubleSide, MeshBasicMaterial, MeshDepthMaterial, MeshMatcapMaterial, MeshToonMaterial, MeshPhysicalMaterial, TextureLoader } from 'three';
+import { MathUtils, Scene, Vector3, PlaneGeometry, Mesh, MeshBasicMaterial, TextureLoader } from 'three';
 import { Sky } from 'three/addons/objects/Sky.js';
 
 

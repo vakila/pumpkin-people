@@ -1,5 +1,5 @@
 import type { Group, Object3D, Scene } from 'three';
-import { GLTFLoader, type GLTF } from 'three/addons/loaders/GLTFLoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const loader = new GLTFLoader();
 
@@ -28,7 +28,7 @@ export async function addGLTFtoScene(scene: Scene, filename: string, dir?: strin
 export function disposeOf(object: Group | Object3D) {
     if (!object) return;
     if (object.children) {
-        for (let child of object.children) {
+        for (const child of object.children) {
             disposeOf(child);
         }
     }

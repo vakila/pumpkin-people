@@ -1,7 +1,6 @@
 import './index.css';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { addDirectionalLight } from './src/3d/lights.ts';
-import { AxesHelper, PerspectiveCamera, Raycaster, Scene, Vector2, WebGLRenderer } from 'three';
+import { PerspectiveCamera, Raycaster, Scene, Vector2, WebGLRenderer } from 'three';
 import { desert, land } from './src/desert.ts';
 import { cacti, addCactus, type CactusIndex } from './src/cacti.ts'
 import type { Group, Object3DEventMap } from 'three';
@@ -81,7 +80,7 @@ function cactusPositioner(cactus: Group<Object3DEventMap>) {
         throw new Error('cannot position a nonexistent cactus!');
     const raycaster = new Raycaster();
     const pointer = new Vector2();
-    return (e: PointerEvent) => {
+    const onPointerMove = (e: PointerEvent) => {
         pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
         pointer.y = - (e.clientY / window.innerHeight) * 2 + 1;
         raycaster.setFromCamera(pointer, camera);
@@ -91,19 +90,23 @@ function cactusPositioner(cactus: Group<Object3DEventMap>) {
             cactus!.position.z = intersection.z;
         }
     }
+    return onPointerMove;
 
 }
 const newButton = getButton('new', 'new cactus');
-newButton.addEventListener('click', async (e) => {
+newButton.addEventListener('click', async (event) => {
     console.log('new cactus');
-    const cactusType = Math.ceil(Math.random() * 4) as CactusIndex;
-    const newCactus = await addCactus(cactusType);
+    console.log('pointer', event.clientX, event.clientY);
+    const cactusType = Math.ceil(Math.random() * 5) as CactusIndex;
+    console.log('cactusType', cactusType);
+    const newCactus = await addCactus(cactusType,); // TODO add position arg
     console.log(newCactus);
     console.log(cacti.children.length);
     if (!newCactus) {
         throw new Error('error adding cactus ' + cactusType);
     }
     const onPointerMove = cactusPositioner(newCactus);
+    onPointerMove(event);
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('click', () => {
         window.removeEventListener('pointermove', onPointerMove);
