@@ -15,37 +15,40 @@ export type CactusIndex = keyof typeof CACTUS_MODELS;
 export async function addCactus(i: CactusIndex) {
     const { file, scale } = CACTUS_MODELS[i];
     const cactus = await addGLTFtoScene(cacti, file);
+    if (!cactus) throw new Error('no cactus!');
     cactus!.scale.setScalar(scale);
     return cactus;
 }
 
 
+async function positionDefaultCacti() {
 
-const cactus1 = await addCactus(1);
-cactus1!.position.x = -10;
-cactus1!.position.z = -20;
-cactus1!.rotation.set(0, MathUtils.degToRad(220), 0);
+    const cactus1 = await addCactus(1);
+    cactus1!.position.x = -10;
+    cactus1!.position.z = -20;
+    cactus1!.rotation.set(0, MathUtils.degToRad(220), 0);
 
-const cactus2 = await addCactus(2);
-cactus2!.position.x = 25;
-cactus2!.position.z = 25;
+    const cactus2 = await addCactus(2);
+    cactus2!.position.x = 25;
+    cactus2!.position.z = 25;
 
-// const bbox2 = new BoxHelper(cactus2!);
-// cacti.add(bbox2);
+    // const bbox2 = new BoxHelper(cactus2!);
+    // cacti.add(bbox2);
 
-const cactus3 = await addCactus(3);
-cactus3!.position.x = -20;
-cactus3!.position.z = -10;
+    const cactus3 = await addCactus(3);
+    cactus3!.position.x = -20;
+    cactus3!.position.z = -10;
 
-const cactus4 = await addCactus(4);
-cactus4!.position.x = -30;
-cactus4!.position.z = 30;
+    const cactus4 = await addCactus(4);
+    cactus4!.position.x = -30;
+    cactus4!.position.z = 30;
 
-const cactus5 = await addCactus(5);
-cactus5!.position.x = 20;
-cactus5!.position.z = 50;
+    const cactus5 = await addCactus(5);
+    cactus5!.position.x = 20;
+    cactus5!.position.z = 50;
 
-
+}
+positionDefaultCacti();
 
 
 export { cacti };

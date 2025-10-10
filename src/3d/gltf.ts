@@ -1,5 +1,5 @@
-import type { Scene } from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import type { Group, Object3D, Scene } from 'three';
+import { GLTFLoader, type GLTF } from 'three/addons/loaders/GLTFLoader.js';
 
 const loader = new GLTFLoader();
 
@@ -13,9 +13,8 @@ export async function addGLTFtoScene(scene: Scene, filename: string, dir?: strin
     try {
 
         const model = await loader.loadAsync(filename);
-        console.log(`Loaded model ${dir ? `${dir}/` : ''}${filename}`, model);
+        console.log(`Loaded model ${dir ? `${dir}/` : ''}${filename}`);
         scene.add(model.scene);
-
         return model.scene;
 
     } catch (error) {
@@ -24,4 +23,16 @@ export async function addGLTFtoScene(scene: Scene, filename: string, dir?: strin
 
         return null;
     };
+}
+
+export function disposeOf(object: Group | Object3D) {
+    if (!object) return;
+    if (object.children) {
+        for (let child of object.children) {
+            disposeOf(child);
+        }
+    }
+    if (object.parent) {
+        object.removeFromParent();
+    }
 }
