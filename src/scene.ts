@@ -2,7 +2,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // import { addGLTFtoScene } from './gltf';
 import { addDirectionalLight } from './3d/lights';
 import { AxesHelper, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
-import { desert } from './desert.ts';
+import { desert, land } from './desert.ts';
 import { cacti } from './cacti.ts'
 
 
@@ -40,7 +40,7 @@ document.body.appendChild(overlay);
 const START_COLOR_CACTI = '#FFFFFF';
 const START_COLOR_LAND = '#000000';
 
-function getColorPicker(name: string) {
+function getColorPicker(name: string, startColor: string) {
     const colorPicker = document.createElement('div');
 colorPicker.classList.add('buttonish');
 const label = document.createElement('label');
@@ -51,18 +51,27 @@ const input = document.createElement('input');
 input.type = 'color';
     input.name = `color-${name}`;
     input.id = `color-${name}`;
-    input.value = START_COLOR_CACTI;
+    input.value = startColor;
 colorPicker.appendChild(input);
-colorPicker.addEventListener('input', () => {
-    console.log('color picked');
-    console.log(input.value);
-    light.color.set(input.value);
-});
+
     return colorPicker;
 }
 
-const cactiColorPicker = getColorPicker('cacti');
+const cactiColorPicker = getColorPicker('cacti', START_COLOR_CACTI);
+cactiColorPicker.addEventListener('input', (e) => {
+    const input = e.target as HTMLInputElement;
+    light.color.set(input.value);
+});
 overlay.appendChild(cactiColorPicker);
+
+
+const desertColorPicker = getColorPicker('desert', START_COLOR_LAND);
+desertColorPicker.addEventListener('input', (e) => {
+    const input = e.target as HTMLInputElement;
+    land.material.color.set(input.value);
+});
+overlay.appendChild(desertColorPicker);
+
 
 // // // dev ui
 // const button = document.createElement('button');
