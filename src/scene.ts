@@ -38,7 +38,7 @@ document.body.appendChild(overlay);
 
 //// colors
 const START_COLOR_CACTI = '#FFFFFF';
-const START_COLOR_LAND = '#000000';
+const START_COLOR_LAND = '#a5988a';
 
 function getColorPicker(name: string, startColor: string) {
     const colorPicker = document.createElement('div');
@@ -106,13 +106,16 @@ controls.minPolarAngle = 0;
 
 
 
-// Elements
-// addDirectionalLight(scene);
+// Pull it all together and set initial colors
+
+
+
 const stringToColor = (color: string) => parseInt(color.replace('#', '0x'));
-const light = addDirectionalLight(scene, stringToColor(START_COLOR_CACTI), 10);
-console.log('LIGHT', light);
-scene.add(desert);
+const light = addDirectionalLight(cacti, stringToColor(START_COLOR_CACTI), 10);
 scene.add(cacti);
+
+land.material.color.set(START_COLOR_LAND);
+scene.add(desert);
 
 
 
