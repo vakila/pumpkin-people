@@ -2,9 +2,10 @@ import './index.css';
 import { addDirectionalLight } from './src/3d/lights.ts';
 import { PerspectiveCamera, Raycaster, Scene, Vector2, WebGLRenderer } from 'three';
 import { desert, land } from './src/desert.ts';
-import { cacti, addCactus, type CactusIndex } from './src/cacti.ts'
+import { cacti, addCactus, type CactusIndex, positionCacti } from './src/cacti.ts'
 import type { Group, Object3DEventMap } from 'three';
 import { disposeOf } from './src/3d/gltf.ts';
+import { loadScene, saveScene } from './src/storage.ts';
 
 
 
@@ -30,9 +31,10 @@ overlay.id = 'overlay';
 document.body.appendChild(overlay);
 
 
+// Saved "game" state
+const sceneData = loadScene();
+
 //// colors
-const START_COLOR_CACTI = '#FFFFFF';
-const START_COLOR_LAND = '#a5988a';
 
 function getColorPicker(name: string, startColor: string) {
     const colorPicker = document.createElement('div');
@@ -51,18 +53,21 @@ function getColorPicker(name: string, startColor: string) {
     return colorPicker;
 }
 
-const cactiColorPicker = getColorPicker('cacti', START_COLOR_CACTI);
+const cactiColorPicker = getColorPicker('cacti', sceneData.colors.cacti);
 cactiColorPicker.addEventListener('input', (e) => {
     const input = e.target as HTMLInputElement;
     light.color.set(input.value);
+    sceneData.colors.cacti = input.value;
+    saveScene(sceneData);
 });
 overlay.appendChild(cactiColorPicker);
 
 
-const desertColorPicker = getColorPicker('desert', START_COLOR_LAND);
+const desertColorPicker = getColorPicker('desert', sceneData.colors.desert);
 desertColorPicker.addEventListener('input', (e) => {
     const input = e.target as HTMLInputElement;
     land.material.color.set(input.value);
+    sceneData.colors.desert = input.value;
 });
 overlay.appendChild(desertColorPicker);
 
@@ -86,8 +91,8 @@ function cactusPositioner(cactus: Group<Object3DEventMap>) {
         raycaster.setFromCamera(pointer, camera);
         const intersection = raycaster.intersectObject(land)[0]?.point;
         if (intersection) {
-            cactus!.position.x = intersection.x;
-            cactus!.position.z = intersection.z;
+            cactus.position.x = intersection.x;
+            cactus.position.z = intersection.z;
         }
     }
     return onPointerMove;
@@ -95,22 +100,29 @@ function cactusPositioner(cactus: Group<Object3DEventMap>) {
 }
 const newButton = getButton('new', 'new cactus');
 newButton.addEventListener('click', async (event) => {
-    console.log('new cactus');
-    console.log('pointer', event.clientX, event.clientY);
     const cactusType = Math.ceil(Math.random() * 5) as CactusIndex;
-    console.log('cactusType', cactusType);
-    const newCactus = await addCactus(cactusType,); // TODO add position arg
-    console.log(newCactus);
-    console.log(cacti.children.length);
+    const newCactus = await addCactus(cactusType);
     if (!newCactus) {
         throw new Error('error adding cactus ' + cactusType);
     }
+
     const onPointerMove = cactusPositioner(newCactus);
-    onPointerMove(event);
     window.addEventListener('pointermove', onPointerMove);
-    window.addEventListener('click', () => {
+    onPointerMove(event); // set initial position
+
+    const onClick = () => {
         window.removeEventListener('pointermove', onPointerMove);
-    });
+        sceneData.cacti.push({
+            type: cactusType,
+            position: {
+                x: newCactus.position.x,
+                z: newCactus.position.z
+            }
+        });
+        saveScene(sceneData);
+        window.removeEventListener('click', onClick);
+    }
+    window.addEventListener('click', onClick);
 
     // newCactus!.position.x = e.clientX / window.innerWidth;
     // newCactus!.position.z = e.clientY;
@@ -127,6 +139,7 @@ clearButton.addEventListener('click', () => {
             disposeOf(last);
         }
     }
+    saveScene({ ...sceneData, cacti: [] });
 });
 overlay.appendChild(clearButton);
 
@@ -139,11 +152,14 @@ overlay.appendChild(clearButton);
 // wrap cacti in their own scene so lighting changes color
 const litCacti = new Scene();
 const stringToColor = (color: string) => parseInt(color.replace('#', '0x'));
-const light = addDirectionalLight(litCacti, stringToColor(START_COLOR_CACTI), 10);
+const light = addDirectionalLight(litCacti, stringToColor(sceneData.colors.cacti), 10);
+
+
+await positionCacti(sceneData.cacti);
 litCacti.add(cacti);
 scene.add(litCacti);
 
-land.material.color.set(START_COLOR_LAND);
+land.material.color.set(sceneData.colors.desert);
 scene.add(desert);
 
 

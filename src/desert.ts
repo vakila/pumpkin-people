@@ -30,6 +30,8 @@ const land = new Mesh(plane, mat)
 loader.load('dry_ground_rocks_diff_2k.jpg', (texture) => {
     const material = new MeshBasicMaterial({
         map: texture,
+        color: land.material.color
+
     });
     land.material = material;
 });
