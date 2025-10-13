@@ -31,6 +31,32 @@ Additional buttons allow you to change the scene colors, though these work by di
 - [ ] choose your cactus model for a less chaotic experience
 - [ ] generate a random scene for a more chaotic experience
 
+## development with vite
+
+To run the development server locally: 
+
+```
+npm run dev
+``` 
+
+Your local desert will be available at [localhost:5173](http://localhost:5173).
+
+
+To build the site to `dist/` for production:
+
+```
+npm run build
+```
+
+To preview the built production site from 'dist/':
+
+```
+npm run preview
+```
+
+The production preview will be available at [localhost:4173](http://localhost:4173).
+
+
 ## credits
 
 Desert texture from Poly Haven: [Dry Ground Rocks by Rob Tuytel](https://polyhaven.com/a/dry_ground_rocks)
