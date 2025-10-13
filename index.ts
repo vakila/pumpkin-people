@@ -33,6 +33,7 @@ document.body.appendChild(overlay);
 
 // Saved "game" state
 const sceneData = loadScene();
+console.log('sceneData', sceneData);
 
 //// colors
 
@@ -68,6 +69,7 @@ desertColorPicker.addEventListener('input', (e) => {
     const input = e.target as HTMLInputElement;
     land.material.color.set(input.value);
     sceneData.colors.desert = input.value;
+    saveScene(sceneData);
 });
 overlay.appendChild(desertColorPicker);
 
@@ -123,9 +125,6 @@ newButton.addEventListener('click', async (event) => {
         window.removeEventListener('click', onClick);
     }
     window.addEventListener('click', onClick);
-
-    // newCactus!.position.x = e.clientX / window.innerWidth;
-    // newCactus!.position.z = e.clientY;
 
 })
 overlay.appendChild(newButton);

@@ -22,34 +22,44 @@ export type CactusData = SceneData['cacti'][number];
 
 
 
-export function loadScene() {
+export function loadScene(): SceneData {
     let savedScene = DEFAULT_SCENE;
 
-    function getSave(storage: Storage) {
-        if (storage) {
+    function getSave(storage: Storage): SceneData | null {
+        try {
             const oldSave = storage.getItem(cactiKey);
+            console.log('got item', oldSave);
             // TODO read save
             if (oldSave) {
                 return JSON.parse(oldSave);
+            } else {
+                return null;
             }
-        } else {
-            return DEFAULT_SCENE
+        } catch (e) {
+            console.error('error loading save:', e);
+            return null;
         }
     }
 
 
     try {
-        savedScene = getSave(window.localStorage);
-        console.log('loaded from localStorage', savedScene);
+        const localSave = getSave(window.localStorage);
+        if (localSave) {
+            savedScene = localSave;
+            console.log('loaded from localStorage', savedScene);
+        }
         
     } catch (e) {
         // try again with fall back to sessionStorage
         console.error(e);
         try {
-            savedScene = getSave(window.sessionStorage);
-            console.log('loaded from sessionStorage', savedScene);
+            const sessionSave = getSave(window.sessionStorage);
+            if (sessionSave) {
+                savedScene = sessionSave;
+                console.log('loaded from sessionStorage', savedScene);
+            }
         } catch (e) {
-            console.error('oh no');
+            console.error('oh no, could not load scene');
             console.error(e);
         }
     } 
@@ -79,13 +89,10 @@ export function saveScene(data?: SceneData) {
             console.log('saved to sessionStorage', value);
         } catch (e) {
             // failing that, give up and just log the state
-            console.error('oh no');
+            console.error('oh no, could not save');
             console.error(e);
+            console.log(value);
         }
     }
     
-}
-
-export function loadOrInitScene(data: SceneData) {
-    return data;
 }
