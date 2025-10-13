@@ -1,5 +1,6 @@
 import { MathUtils, Scene, Vector3, PlaneGeometry, Mesh, MeshBasicMaterial, TextureLoader } from 'three';
 import { Sky } from 'three/addons/objects/Sky.js';
+import rocksTexture from './assets/dry_ground_rocks_diff_2k.jpg';
 
 
 const desert = new Scene()
@@ -27,14 +28,13 @@ const mat = new MeshBasicMaterial({ color: 0x000000 });
 
 const loader = new TextureLoader();
 const land = new Mesh(plane, mat)
-loader.load('dry_ground_rocks_diff_2k.jpg', (texture) => {
-    const material = new MeshBasicMaterial({
+const texture = await loader.loadAsync(rocksTexture);
+const material = new MeshBasicMaterial({
         map: texture,
         color: land.material.color
 
     });
-    land.material = material;
-});
+land.material = material;
 desert.add(land);
 
 

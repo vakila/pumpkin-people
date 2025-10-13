@@ -2,14 +2,27 @@ import { Scene } from "three";
 import { addGLTFtoScene } from "./3d/gltf";
 import { type CactusData } from "./storage";
 
+
+// import model assets so vite can do its thing
+// @ts-expect-error cannot find module
+import cactus1 from './assets/cactus_1.glb';
+// @ts-expect-error cannot find module
+import cactus2 from './assets/cactus_2.glb';
+// @ts-expect-error cannot find module
+import cactus3 from './assets/cactus_3.glb';
+// @ts-expect-error cannot find module
+import cactus4 from './assets/cactus_4.glb';
+// @ts-expect-error cannot find module
+import cactus5 from './assets/cactus_5.glb';
+
 const cacti = new Scene();
 
 const CACTUS_MODELS = {
-    1: { file: 'cactus_1-v1.glb', scale: 1 },
-    2: { file: 'cactus_2-v1.glb', scale: 550 },
-    3: { file: 'cactus_3-v1.glb', scale: 1 },
-    4: { file: 'cactus_4.glb', scale: 6 },
-    5: { file: 'cactus_5/scene.gltf', scale: 4 }
+    1: { file: cactus1, scale: 1 },
+    2: { file: cactus2, scale: 550 },
+    3: { file: cactus3, scale: 1 },
+    4: { file: cactus4, scale: 6 },
+    5: { file: cactus5, scale: 4 }
 };
 export type CactusIndex = keyof typeof CACTUS_MODELS;
 
