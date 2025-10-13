@@ -28,6 +28,7 @@ Additional buttons allow you to change the scene colors, though these work by di
 - [ ] save an image of your scene
 - [ ] starry night sky
 - [ ] moar cacti models
+- [ ] performance improvements
 - [ ] choose your cactus model for a less chaotic experience
 - [ ] generate a random scene for a more chaotic experience
 

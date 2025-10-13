@@ -31,8 +31,7 @@ const land = new Mesh(plane, mat)
 const texture = await loader.loadAsync(rocksTexture);
 const material = new MeshBasicMaterial({
         map: texture,
-        color: land.material.color
-
+    color: land.material.color
     });
 land.material = material;
 desert.add(land);
