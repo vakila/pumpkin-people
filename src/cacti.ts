@@ -1,4 +1,4 @@
-import { MathUtils, Scene } from "three";
+import { Scene } from "three";
 import { addGLTFtoScene } from "./3d/gltf";
 import { type CactusData } from "./storage";
 

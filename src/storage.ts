@@ -1,4 +1,3 @@
-import type { CactusIndex } from "./cacti";
 
 // Check if we can use localStorage
 type Storage = globalThis.Storage;
