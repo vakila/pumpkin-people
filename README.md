@@ -31,6 +31,8 @@ Additional buttons allow you to change the scene colors, though these work by di
 - [ ] performance improvements
 - [ ] choose your cactus model for a less chaotic experience
 - [ ] generate a random scene for a more chaotic experience
+- [ ] undo last cactus
+- [ ] reposition/delete an existing cactus
 
 ## development with vite
 
