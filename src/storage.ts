@@ -9,16 +9,12 @@ export const DEFAULT_SCENE = {
         cacti: '#FFFFFF',
         desert: '#a5988a',
     },
-    cacti: [
-        { type: 1, position: { x: -10, z: -20 } },
-        { type: 2, position: { x: 25, z: 25 } },
-        { type: 3, position: { x: -20, z: -10 } },
-        { type: 4, position: { x: -30, z: 30 } },
-        { type: 5, position: { x: 20, z: 50 } }
+    people: [
+        { position: { x: 0, z: 0 } },
     ]
 };
 export type SceneData = typeof DEFAULT_SCENE;
-export type CactusData = SceneData['cacti'][number];
+export type CactusData = SceneData['people'][number];
 
 
 

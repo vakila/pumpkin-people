@@ -2,10 +2,10 @@ import './index.css';
 import { addDirectionalLight } from './src/3d/lights.ts';
 import { PerspectiveCamera, Raycaster, Scene, Vector2, WebGLRenderer } from 'three';
 import { desert, land } from './src/desert.ts';
-import { cacti, addCactus, type CactusIndex, positionCacti } from './src/cacti.ts'
-import type { Group, Object3DEventMap } from 'three';
+import { people, addPerson, positionPeople } from './src/people.ts'
 import { disposeOf } from './src/3d/gltf.ts';
 import { loadScene, saveScene } from './src/storage.ts';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 
 
@@ -26,14 +26,24 @@ document.body.appendChild(renderer.domElement);
 
 // UI
 
+const controls = new OrbitControls(camera, renderer.domElement);
+
 const overlay = document.createElement('div');
 overlay.id = 'overlay';
 document.body.appendChild(overlay);
 
 
 // Saved "game" state
-const sceneData = loadScene();
-console.log('sceneData', sceneData);
+const sceneData = {
+    colors: {
+        cacti: '#FFFFFF',
+        desert: '#a5988a',
+    },
+    people: [
+        { position: { x: 0, z: 0 } },
+    ]
+};
+// console.log('sceneData', sceneData);
 
 //// colors
 
@@ -82,9 +92,9 @@ function getButton(name: string, text: string) {
     return button;
 }
 
-function cactusPositioner(cactus: Group<Object3DEventMap>) {
-    if (!cactus)
-        throw new Error('cannot position a nonexistent cactus!');
+function cactusPositioner(person: Scene) {
+    if (!person)
+        throw new Error('cannot position a nonexistent person!');
     const raycaster = new Raycaster();
     const pointer = new Vector2();
     const onPointerMove = (e: PointerEvent) => {
@@ -93,8 +103,8 @@ function cactusPositioner(cactus: Group<Object3DEventMap>) {
         raycaster.setFromCamera(pointer, camera);
         const intersection = raycaster.intersectObject(land)[0]?.point;
         if (intersection) {
-            cactus.position.x = intersection.x;
-            cactus.position.z = intersection.z;
+            person.position.x = intersection.x;
+            person.position.z = intersection.z;
         }
     }
     return onPointerMove;
@@ -102,23 +112,22 @@ function cactusPositioner(cactus: Group<Object3DEventMap>) {
 }
 const newButton = getButton('new', 'new cactus');
 newButton.addEventListener('click', async (event) => {
-    const cactusType = Math.ceil(Math.random() * 5) as CactusIndex;
-    const newCactus = await addCactus(cactusType);
-    if (!newCactus) {
-        throw new Error('error adding cactus ' + cactusType);
+    // const cactusType = ///Math.ceil(Math.random() * 5) as CactusIndex;
+    const newPerson = await addPerson();
+    if (!newPerson) {
+        throw new Error('error adding person');
     }
 
-    const onPointerMove = cactusPositioner(newCactus);
+    const onPointerMove = cactusPositioner(newPerson);
     window.addEventListener('pointermove', onPointerMove);
     onPointerMove(event); // set initial position
 
     const onClick = () => {
         window.removeEventListener('pointermove', onPointerMove);
-        sceneData.cacti.push({
-            type: cactusType,
+        sceneData.people.push({
             position: {
-                x: newCactus.position.x,
-                z: newCactus.position.z
+                x: newPerson.position.x,
+                z: newPerson.position.z
             }
         });
         saveScene(sceneData);
@@ -132,13 +141,13 @@ overlay.appendChild(newButton);
 // Clear scene
 const clearButton = getButton('clear', 'clear cacti');
 clearButton.addEventListener('click', () => {
-    while (cacti.children.length > 0) {
-        const last = cacti.children.pop();
+    while (people.children.length > 0) {
+        const last = people.children.pop();
         if (last) {
             disposeOf(last);
         }
     }
-    saveScene({ ...sceneData, cacti: [] });
+    saveScene({ ...sceneData, people: [] });
 });
 overlay.appendChild(clearButton);
 
@@ -149,14 +158,15 @@ overlay.appendChild(clearButton);
 
 
 // wrap cacti in their own scene so lighting changes color
-const litCacti = new Scene();
-const stringToColor = (color: string) => parseInt(color.replace('#', '0x'));
-const light = addDirectionalLight(litCacti, stringToColor(sceneData.colors.cacti), 10);
+// const litPeople = new Scene();
+// const stringToColor = (color: string) => parseInt(color.replace('#', '0x'));
+// const light = addDirectionalLight(litPeople, stringToColor(sceneData.colors.cacti), 10);
 
+console.log('sceneData', sceneData);
 
-await positionCacti(sceneData.cacti);
-litCacti.add(cacti);
-scene.add(litCacti);
+await positionPeople(sceneData.people);
+// litPeople.add(people);
+scene.add(people);
 
 land.material.color.set(sceneData.colors.desert);
 scene.add(desert);
